@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 285" role="img" aria-labelledby="title desc">
+  <title id="title">Ways to use Metis</title>
+  <desc id="desc">Four equally aligned cards for Interactive, Print and JSON, RPC, and SDK modes.</desc>
+  <style>
+    :root { color-scheme: light dark; --text:#111827; --muted:#4b5563; --border:#d1d5db; --soft:#f3f4f6; }
+    @media (prefers-color-scheme: dark) { :root { --text:#f3f4f6; --muted:#b6c0ce; --border:#475569; --soft:#253044; } }
+    .text{fill:var(--text)} .muted{fill:var(--muted)} .card{fill:none;stroke:var(--border)} .soft{fill:var(--soft)}
+  </style>
+  <g font-family="Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif">
+    <text class="text" x="600" y="30" text-anchor="middle" font-size="21" font-weight="700" letter-spacing="1.2">CHOOSE YOUR INTERFACE</text>
+    <text class="muted" x="600" y="56" text-anchor="middle" font-size="14">Use the same agent workflow from a terminal, process, or application</text>
+    <g transform="translate(30 86)"><rect class="card" width="255" height="150" rx="15"/><rect class="soft" x="20" y="20" width="42" height="28" rx="8"/><text class="text" x="41" y="40" text-anchor="middle" font-size="11" font-weight="700">TUI</text><text class="text" x="20" y="78" font-size="17" font-weight="700">Interactive</text><text class="muted" x="20" y="105" font-size="13"><tspan x="20">Guided terminal-based</tspan><tspan x="20" dy="20">coding sessions.</tspan></text></g>
+    <g transform="translate(325 86)"><rect class="card" width="255" height="150" rx="15"/><rect class="soft" x="20" y="20" width="42" height="28" rx="8"/><text class="text" x="41" y="40" text-anchor="middle" font-size="11" font-weight="700">{ }</text><text class="text" x="20" y="78" font-size="17" font-weight="700">Print and JSON</text><text class="muted" x="20" y="105" font-size="13"><tspan x="20">Scripts, pipelines, and</tspan><tspan x="20" dy="20">machine-readable output.</tspan></text></g>
+    <g transform="translate(620 86)"><rect class="card" width="255" height="150" rx="15"/><rect class="soft" x="20" y="20" width="42" height="28" rx="8"/><text class="text" x="41" y="40" text-anchor="middle" font-size="11" font-weight="700">RPC</text><text class="text" x="20" y="78" font-size="17" font-weight="700">Process integration</text><text class="muted" x="20" y="105" font-size="13"><tspan x="20">External orchestration</tspan><tspan x="20" dy="20">through an RPC entry point.</tspan></text></g>
+    <g transform="translate(915 86)"><rect class="card" width="255" height="150" rx="15"/><rect class="soft" x="20" y="20" width="42" height="28" rx="8"/><text class="text" x="41" y="40" text-anchor="middle" font-size="11" font-weight="700">SDK</text><text class="text" x="20" y="78" font-size="17" font-weight="700">Embedded</text><text class="muted" x="20" y="105" font-size="13"><tspan x="20">Use Metis inside another</tspan><tspan x="20" dy="20">Node.js application.</tspan></text></g>
+  </g>
+</svg>
