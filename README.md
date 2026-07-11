@@ -3,25 +3,68 @@
 </p>
 
 <p align="center">
-  A terminal-first coding agent for understanding repositories,<br />
-  making focused changes, and validating results.
+  <strong>Help coding models finish work faster, remember what matters, and verify the result.</strong>
 </p>
 
 <p align="center">
-  <a href="#quick-start">Quick start</a> ·
-  <a href="#workflow">Workflow</a> ·
-  <a href="#capabilities">Capabilities</a> ·
-  <a href="#interfaces">Interfaces</a> ·
-  <a href="#development">Development</a>
+  <a href="#why-metis">Why Metis</a> ·
+  <a href="#what-makes-it-reliable">Reliability</a> ·
+  <a href="#quick-start">Quick start</a>
 </p>
 
 ---
 
-## Overview
+## Why Metis
 
-Metis works where code lives: inside a repository, alongside its files, tools, and tests. It combines file operations, shell execution, session management, and an interactive terminal workflow in one CLI.
+Metis is an agent layer for coding models. It does not replace the model. It gives the model a better way to search, remember, work, and check its own result.
 
-The goal is a practical coding loop: inspect before acting, keep changes scoped, and validate the result with the repository's own tooling.
+That means less time spent repeating context, fewer missed requirements, and more completed tasks.
+
+<p align="center">
+  <img src="docs/images/metis-speed.svg" width="100%" alt="User test comparing Metis and OpenCode task completion time" />
+</p>
+
+In one user test with the same task:
+
+- **Metis finished in 1 minute 30 seconds.**
+- **OpenCode finished in 3 minutes 30 seconds.**
+- No accuracy difference was observed in that test.
+
+Metis used about 57% less time in this comparison. This is one user test, not a universal benchmark; results depend on the task, model, tools, and environment.
+
+## What makes it reliable
+
+<p align="center">
+  <img src="docs/images/metis-capabilities.svg" width="100%" alt="Metis memory, Dream, search, and verification features" />
+</p>
+
+### Memory and Lessons
+
+Metis checks its brain map before starting technical work. It can reuse relevant decisions, project knowledge, and technical lessons from earlier sessions instead of rediscovering them every time.
+
+### Dream
+
+Dream reviews completed work and consolidates useful notes into structured memories and lessons. Temporary task context becomes reusable knowledge, while low-value details can be cleaned up.
+
+### Search before action
+
+Metis investigates before making changes. It searches the repository first and uses web research when needed to check authoritative documentation, known solutions, release notes, or security information.
+
+### Logs and verification
+
+Metis records meaningful errors and completion summaries. Before it says a task is finished, it compares the result with the user's original prompt and checks every requirement, constraint, and later clarification. It also runs relevant builds, tests, and functional checks when available.
+
+Together, these behaviors help the same coding model work with better context, fewer assumptions, and a stronger completion loop.
+
+## How it works
+
+<p align="center">
+  <img src="docs/images/metis-workflow.svg" width="100%" alt="Metis workflow: Understand, Build, Verify" />
+</p>
+
+1. **Understand** — read the request, recall relevant lessons, and investigate the codebase.
+2. **Build** — make focused changes and keep a useful work record.
+3. **Verify** — test the result and compare it with the original request.
 
 ## Quick start
 
@@ -32,83 +75,34 @@ git clone https://github.com/Wholiver/metis.git
 cd metis
 npm install
 npm run build
-```
-
-Start Metis from the repository:
-
-```bash
 node dist/cli.js
 ```
 
-View available command-line options:
+To see available options:
 
 ```bash
 node dist/cli.js --help
 ```
 
-## Workflow
+<details>
+<summary><strong>Developer information</strong></summary>
 
-Metis grounds each task in repository context, carries it through focused implementation, then closes the loop with validation.
+### Interfaces
 
-<p align="center">
-  <img src="docs/images/metis-workflow.svg" width="100%" alt="Metis workflow: Understand, Build, Verify" />
-</p>
-
-The workflow stays consistent across small fixes, larger features, and exploratory repository work. Each phase uses evidence from the codebase rather than assumptions about it.
-
-## Capabilities
-
-Core tools stay close to the work: repository inspection, command execution, agent coordination, and reviewable output.
-
-<p align="center">
-  <img src="docs/images/metis-capabilities.svg" width="100%" alt="Metis core capabilities" />
-</p>
-
-Metis can read, search, create, and edit files; run shell commands; manage coding sessions and bounded subagent work; and export artifacts for review or follow-up.
-
-## Interfaces
-
-Use the same agent workflow through the interface that fits your environment.
-
-<p align="center">
-  <img src="docs/images/metis-modes.svg" width="100%" alt="Interactive, Print and JSON, RPC, and SDK interfaces" />
-</p>
-
-- **Interactive** provides a guided terminal experience for hands-on coding sessions.
-- **Print and JSON** support scripts, pipelines, and machine-readable automation.
-- **RPC** provides an entry point for process integration and external orchestration.
-- **SDK** embeds Metis in another Node.js application.
+Metis supports an interactive terminal, print and JSON output, RPC integration, and an SDK for Node.js applications.
 
 The package exports the SDK from `@wholiver_hu/metis` and the RPC entry point from `@wholiver_hu/metis/rpc-entry`.
 
-## Development
-
-Install dependencies once with `npm install`, then use the project scripts below.
-
-### Common commands
+### Commands
 
 | Command | Purpose |
 | --- | --- |
-| `npm run build` | Remove `dist/`, compile TypeScript, and copy runtime assets. |
+| `npm run build` | Compile TypeScript and copy runtime assets. |
 | `npm test` | Run the Vitest test suite. |
 | `npm run clean` | Remove compiled output. |
-| `npm run shrinkwrap` | Regenerate the package shrinkwrap. |
-| `npm run build:binary` | Build the standalone binary and bundled assets. |
+| `npm run build:binary` | Build the standalone binary. |
 
-### Project layout
-
-```text
-src/          CLI, agent workflow, terminal UI, and core features
-docs/         User and developer documentation
-examples/     Example extensions and integrations
-test/         Automated tests and fixtures
-vendor/       Bundled local dependencies
-dist/         Generated build output
-```
-
-## Contributing
-
-Keep changes focused and aligned with existing project patterns. When behavior changes, add or update tests and run the most relevant validation before opening a pull request. For larger work, begin with an issue or short proposal to align on direction.
+</details>
 
 ## License
 
