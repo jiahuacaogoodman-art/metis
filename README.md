@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="src/modes/interactive/assets/metis-pixel-mark.svg" width="112" alt="Metis pixel mark" />
+  <img src="src/modes/interactive/assets/metis-pixel-mark.svg" width="144" alt="Metis pixel mark" />
 </p>
 
 <h1 align="center">Metis</h1>
