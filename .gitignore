@@ -1,0 +1,9 @@
+node_modules
+dist
+.sessions
+.metis/plan/
+.env
+.DS_Store
+
+
+*.bun-build

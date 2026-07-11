@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 700 700"
+  role="img"
+  aria-labelledby="metis-mark-title metis-mark-description"
+  shape-rendering="crispEdges"
+>
+  <title id="metis-mark-title">Metis</title>
+  <desc id="metis-mark-description">A modular letter M built from equal square units.</desc>
+  <style>
+    :root { color: #111318; }
+    @media (prefers-color-scheme: dark) {
+      :root { color: #ffffff; }
+    }
+  </style>
+
+  <!-- Every visible module is exactly 64 × 64 on an 80-unit grid. -->
+  <g fill="currentColor">
+    <!-- Row 1 -->
+    <rect x="78"  y="78"  width="64" height="64" />
+    <rect x="558" y="78"  width="64" height="64" />
+
+    <!-- Row 2 -->
+    <rect x="78"  y="158" width="64" height="64" />
+    <rect x="158" y="158" width="64" height="64" />
+    <rect x="478" y="158" width="64" height="64" />
+    <rect x="558" y="158" width="64" height="64" />
+
+    <!-- Row 3 -->
+    <rect x="78"  y="238" width="64" height="64" />
+    <rect x="238" y="238" width="64" height="64" />
+    <rect x="398" y="238" width="64" height="64" />
+    <rect x="558" y="238" width="64" height="64" />
+
+    <!-- Row 4 -->
+    <rect x="78"  y="318" width="64" height="64" />
+    <rect x="318" y="318" width="64" height="64" />
+    <rect x="558" y="318" width="64" height="64" />
+
+    <!-- Rows 5–7 -->
+    <rect x="78"  y="398" width="64" height="64" />
+    <rect x="558" y="398" width="64" height="64" />
+    <rect x="78"  y="478" width="64" height="64" />
+    <rect x="558" y="478" width="64" height="64" />
+    <rect x="78"  y="558" width="64" height="64" />
+    <rect x="558" y="558" width="64" height="64" />
+  </g>
+</svg>

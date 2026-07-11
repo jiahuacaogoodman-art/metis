@@ -1,0 +1,17 @@
+{
+  "iou": 0.960439,
+  "source_only_px": 1188,
+  "render_only_px": 2377,
+  "source_bbox": [
+    441,
+    420,
+    813,
+    793
+  ],
+  "render_bbox": [
+    441,
+    419,
+    812,
+    792
+  ]
+}

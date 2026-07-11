@@ -1,0 +1,43 @@
+{
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "Node16",
+		"lib": ["ES2022"],
+		"strict": true,
+		"erasableSyntaxOnly": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"declaration": true,
+		"declarationMap": true,
+		"sourceMap": true,
+		"inlineSources": true,
+		"inlineSourceMap": false,
+		"moduleResolution": "Node16",
+		"resolveJsonModule": true,
+		"allowImportingTsExtensions": true,
+		"rewriteRelativeImportExtensions": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"useDefineForClassFields": false,
+		"types": ["node"],
+		"outDir": "./dist",
+		"paths": {
+			"@earendil-works/metis-agent-core": ["./node_modules/@earendil-works/metis-agent-core/dist/index.d.ts"],
+			"@earendil-works/metis-agent-core/*": ["./node_modules/@earendil-works/metis-agent-core/dist/*.d.ts"],
+			"@earendil-works/metis-ai": ["./node_modules/@earendil-works/metis-ai/dist/index.d.ts"],
+			"@earendil-works/metis-ai/*": [
+				"./node_modules/@earendil-works/metis-ai/dist/*.d.ts",
+				"./node_modules/@earendil-works/metis-ai/dist/providers/*.d.ts"
+			],
+			"@earendil-works/metis-tui": ["./node_modules/@earendil-works/metis-tui/dist/index.d.ts"],
+			"@earendil-works/metis-tui/*": [
+				"./node_modules/@earendil-works/metis-tui/dist/*.d.ts",
+				"./node_modules/@earendil-works/metis-tui/dist/components/*.d.ts"
+			]
+		},
+		"rootDir": "./src"
+	},
+	"include": ["src/**/*.ts", "src/**/*.d.ts"],
+	"exclude": ["node_modules", "dist"]
+}
