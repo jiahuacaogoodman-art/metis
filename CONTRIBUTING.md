@@ -1,18 +1,20 @@
-# 贡献指南
+# Contributing Guide
 
-感谢你参与 Metis 开发。本文面向核心功能开发者、Extension 作者和 Package 维护者，说明如何理解项目、实施修改、验证结果并提交贡献。
+**English** · [简体中文](CONTRIBUTING.zh-CN.md)
 
-如果你使用 AI 编码智能体协助开发，请同时阅读 [AGENTS.md](AGENTS.md)。该文件为智能体提供仓库地图、执行顺序和验证要求。
+Thank you for contributing to Metis. This guide is for core developers, Extension authors, and Package maintainers. It explains how to understand the repository, implement changes, validate results, and prepare a contribution.
 
-## 开始之前
+If an AI coding agent assists your work, also read [AGENTS.md](AGENTS.md). It gives agents a repository map, execution order, safety boundaries, and verification requirements.
 
-- 使用 Node.js `>=22.19.0`。
-- 先搜索相关 Issue、文档和现有实现，避免重复功能。
-- 保持改动聚焦；不要顺手重写无关模块。
-- 不要提交 API Key、Token、会话日志、`.env`、`dist/` 或本地索引。
-- Extension 具有当前用户的完整系统权限，只运行和分发可信代码。
+## Before you start
 
-## 本地开发
+- Use Node.js `>=22.19.0`.
+- Search existing issues, documentation, implementations, and tests before adding new behavior.
+- Keep changes focused; do not mix unrelated refactors into a contribution.
+- Do not commit API keys, tokens, session logs, `.env`, `dist/`, local indexes, or generated output.
+- Extensions run with the current user's full system permissions. Install and distribute only trusted code.
+
+## Local development
 
 ```bash
 git clone https://github.com/Wholiver/metis.git
@@ -22,64 +24,62 @@ npm run build
 npm test
 ```
 
-常用命令：
-
-| 命令 | 用途 |
+| Command | Purpose |
 | --- | --- |
-| `npm run build` | 清理 `dist/`、编译 TypeScript、复制运行时资源。 |
-| `npm test` | 运行完整 Vitest 测试。 |
-| `npm test -- test/example.test.ts` | 运行指定测试文件。 |
-| `npm run clean` | 删除构建输出。 |
-| `npm run build:binary` | 构建独立二进制和资源。 |
+| `npm run build` | Clean `dist/`, compile TypeScript, and copy runtime assets. |
+| `npm test` | Run the full Vitest suite. |
+| `npm test -- test/example.test.ts` | Run one test file. |
+| `npm run clean` | Remove generated build output. |
+| `npm run build:binary` | Build the standalone binary and bundled assets. |
 
-如果构建或测试挂起，不要直接宣称通过。记录停留阶段、相关进程和已尝试的恢复方式，然后在 Pull Request 中说明。
+If a build or test hangs, do not report it as passing. Record the exact stage, process, and recovery attempt, then disclose the limitation in the pull request.
 
-## 仓库结构
+## Repository structure
 
-| 路径 | 责任 |
+| Path | Responsibility |
 | --- | --- |
-| `src/main.ts` | CLI 启动、参数处理、运行模式选择与顶层编排。 |
-| `src/core/` | Agent Session、SDK、设置、模型注册、资源加载和核心运行时。 |
-| `src/core/tools/` | 模型可调用的内置工具。 |
-| `src/core/extensions/` | Extension 加载、生命周期事件、注册 API 和执行器。 |
-| `src/core/builtins/` | Dream 等内置能力。 |
-| `src/modes/interactive/` | 交互式终端模式、组件、主题和渲染。 |
-| `src/modes/print-mode.ts` | Print 与 JSON 输出模式。 |
-| `src/modes/rpc/` | RPC 服务端、客户端和进程集成。 |
-| `src/index.ts` | 公共 SDK 与类型导出。 |
-| `vendor/` | 本仓库使用的本地依赖包；除非任务明确涉及，不要随意修改。 |
-| `test/` | Vitest 测试与必要夹具。 |
-| `docs/` | 用户、Extension、Package、SDK 与平台文档。 |
-| `examples/extensions/` | 可运行的 Extension 示例。 |
+| `src/main.ts` | CLI startup, argument handling, mode selection, and top-level orchestration. |
+| `src/core/` | Agent sessions, SDK, settings, model registry, resource loading, and core runtime. |
+| `src/core/tools/` | Built-in tools callable by models. |
+| `src/core/extensions/` | Extension discovery, lifecycle events, registration APIs, and execution. |
+| `src/core/builtins/` | Built-in capabilities such as Dream. |
+| `src/modes/interactive/` | Interactive terminal mode, components, themes, and rendering. |
+| `src/modes/print-mode.ts` | Print and JSON output. |
+| `src/modes/rpc/` | RPC server, client, and process integration. |
+| `src/index.ts` | Public SDK and type exports. |
+| `vendor/` | Local dependencies used by this repository. Change only when the requested behavior belongs there. |
+| `test/` | Vitest tests and required fixtures. |
+| `docs/` | User, Extension, Package, SDK, and platform documentation. |
+| `examples/extensions/` | Runnable Extension examples. |
 
-修改公共类型或导出时，检查 `src/index.ts`、SDK、RPC 和相关文档是否需要同步。
+When public types or exports change, check `src/index.ts`, SDK consumers, RPC consumers, tests, and documentation.
 
-## 核心功能开发流程
+## Core development workflow
 
-1. **确认需求**：列出用户要求、兼容性限制和验收条件。
-2. **定位实现**：优先查找现有抽象、调用方和测试，避免重复实现。
-3. **设计最小改动**：明确状态归属、错误边界、取消行为和不同运行模式的影响。
-4. **实施**：遵循现有 TypeScript、ESM、命名和错误处理模式。
-5. **测试**：覆盖成功、失败、取消、空输入、边界输入和回归路径。
-6. **复核需求**：完成前逐项对照原始需求和后续补充。
-7. **更新文档**：用户可见行为、配置、命令、API 或 Extension 接口发生变化时必须更新文档。
+1. **Confirm requirements** — list user requirements, compatibility constraints, and acceptance conditions.
+2. **Locate the implementation** — inspect existing abstractions, callers, tests, and error behavior.
+3. **Design the smallest change** — identify state ownership, failure boundaries, cancellation, and affected modes.
+4. **Implement** — follow existing TypeScript, ESM, naming, and error-handling patterns.
+5. **Test** — cover success, failure, cancellation, empty input, boundaries, and regressions.
+6. **Verify prompt fidelity** — compare the result against the original request and every later clarification.
+7. **Update documentation** — document user-visible behavior, configuration, commands, public APIs, and Extension changes.
 
-涉及资源路径时使用 `src/config.ts` 中的路径函数，不要依赖 `__dirname` 推断软件包资源位置。
+Use path helpers from `src/config.ts` for package assets. Do not infer package resource locations from `__dirname`.
 
-## Extension（插件）接入
+## Extension integration
 
-Metis 中的插件接口称为 **Extension**。Extension 是 TypeScript 或 JavaScript 模块，可以：
+Metis calls its plugin interface an **Extension**. Extensions are TypeScript or JavaScript modules that can:
 
-- 注册模型可调用的工具；
-- 注册 `/command`、快捷键和 CLI Flag；
-- 监听并拦截 Session、Agent、Model、Tool 等生命周期事件；
-- 添加交互式 UI、状态栏、Widget 和自定义渲染；
-- 保存自定义 Session 状态；
-- 接入 Webhook、CI、文件监听器或外部服务。
+- register tools callable by the model;
+- register slash commands, shortcuts, and CLI flags;
+- observe or intercept Session, Agent, Model, Tool, and other lifecycle events;
+- add interactive UI, status items, widgets, and custom renderers;
+- persist custom session state;
+- integrate webhooks, CI, file watchers, or external services.
 
-### 最小 Extension
+### Minimal Extension
 
-创建 `.metis/extensions/hello.ts`：
+Create `.metis/extensions/hello.ts`:
 
 ```typescript
 import type { ExtensionAPI } from "metis";
@@ -110,38 +110,38 @@ export default function (metis: ExtensionAPI) {
 }
 ```
 
-快速加载：
+Load it directly:
 
 ```bash
 node dist/cli.js -e ./.metis/extensions/hello.ts
 ```
 
-自动发现位置：
+Auto-discovery locations:
 
-| 位置 | 作用域 |
+| Location | Scope |
 | --- | --- |
-| `~/.metis/agent/extensions/*.ts` | 所有项目。 |
-| `~/.metis/agent/extensions/*/index.ts` | 所有项目，目录形式。 |
-| `.metis/extensions/*.ts` | 当前可信项目。 |
-| `.metis/extensions/*/index.ts` | 当前可信项目，目录形式。 |
+| `~/.metis/agent/extensions/*.ts` | All projects. |
+| `~/.metis/agent/extensions/*/index.ts` | All projects, directory form. |
+| `.metis/extensions/*.ts` | Current trusted project. |
+| `.metis/extensions/*/index.ts` | Current trusted project, directory form. |
 
-自动发现的 Extension 可以通过 `/reload` 热重载。项目级 Extension 只会在用户信任项目后加载。
+Auto-discovered Extensions can be hot-reloaded with `/reload`. Project-local Extensions load only after the project is trusted.
 
-### Extension 开发要求
+### Extension requirements
 
-- 为 Tool 参数提供明确、严格的 TypeBox Schema。
-- 尊重 `AbortSignal`，长任务应支持取消。
-- 错误信息必须说明失败原因和恢复方式，不要静默吞错。
-- 危险写入、删除、提权或外部发布操作需要清晰确认边界。
-- 同时考虑 `tui`、`print`、`json` 和 `rpc` 模式；UI 不可用时提供降级行为。
-- 长期资源在 `session_shutdown` 等生命周期中释放。
-- 第三方运行时依赖放在 `dependencies`，不要只放在 `devDependencies`。
+- Define clear and strict TypeBox schemas for tool parameters.
+- Respect `AbortSignal`; long-running operations must support cancellation.
+- Return actionable errors with failure and recovery details.
+- Keep destructive writes, deletion, privilege escalation, and external publishing behind explicit authority boundaries.
+- Consider `tui`, `print`, `json`, and `rpc` modes; provide a fallback when UI is unavailable.
+- Release long-lived resources during lifecycle events such as `session_shutdown`.
+- Put third-party runtime packages in `dependencies`, not only `devDependencies`.
 
-完整接口见 [docs/extensions.md](docs/extensions.md)，自定义模型提供商见 [docs/custom-provider.md](docs/custom-provider.md)。
+See [docs/extensions.md](docs/extensions.md) for the full API and [docs/custom-provider.md](docs/custom-provider.md) for custom model providers.
 
-## 分发 Metis Package
+## Distributing a Metis Package
 
-Package 可以同时分发 Extensions、Skills、Prompt Templates 和 Themes。推荐结构：
+A Package can distribute Extensions, Skills, Prompt Templates, and Themes together.
 
 ```text
 my-metis-package/
@@ -151,8 +151,6 @@ my-metis-package/
   prompts/
   themes/
 ```
-
-`package.json` 示例：
 
 ```json
 {
@@ -171,7 +169,7 @@ my-metis-package/
 }
 ```
 
-安装和测试：
+Install and test:
 
 ```bash
 metis install ./my-metis-package
@@ -181,33 +179,33 @@ metis update --extensions
 metis remove ./my-metis-package
 ```
 
-`-l` 写入项目设置；不带 `-l` 时写入用户设置。npm、git、URL 和本地路径均可作为安装来源。完整格式见 [docs/packages.md](docs/packages.md)。
+`-l` writes to project settings; without `-l`, commands use user settings. npm, git, URLs, and local paths are supported. See [docs/packages.md](docs/packages.md) for complete source and manifest rules.
 
-## 测试要求
+## Testing requirements
 
-按改动风险选择测试，不要只运行最方便的一项：
+Choose checks based on risk, not convenience:
 
-- 核心运行时：构建、类型检查、相关单元测试、失败与取消路径。
-- CLI：参数组合、TTY/非 TTY、退出码、stdin/stdout/stderr。
-- TUI：键盘操作、布局、窄终端、明暗主题和不可交互环境。
-- Extension：加载、重载、事件顺序、工具结果、取消、错误与不同 Mode。
-- Package：本地安装、生产依赖、资源发现、启用/禁用和卸载。
-- 文档与 SVG：链接、示例命令、XML、明暗模式和移动端缩放。
+- Core runtime: build, type checks, targeted tests, failure, and cancellation.
+- CLI: argument combinations, TTY/non-TTY, exit codes, stdin, stdout, and stderr.
+- TUI: keyboard behavior, layout, narrow terminals, light/dark themes, and non-interactive environments.
+- Extensions: load, reload, event order, tool results, cancellation, errors, state, and every supported mode.
+- Packages: local installation, production dependencies, discovery, enable/disable, update, and removal.
+- Documentation and SVG: links, commands, XML, light/dark rendering, and mobile scaling.
 
-修复 Bug 时先添加能够复现问题的测试，再验证修复后测试通过。
+For bug fixes, add a test that reproduces the problem before validating the fix.
 
-## Pull Request
+## Pull requests
 
-提交前确认：
+Before opening a pull request:
 
-- [ ] 改动范围与 Issue/需求一致，没有无关重构。
-- [ ] 新行为有测试，原有测试没有被无理由删除或放宽。
-- [ ] `npm run build` 和相关测试通过；无法运行时已说明原因。
-- [ ] 用户可见变化已更新 README、`docs/` 或示例。
-- [ ] 没有提交 Secret、日志、生成目录或本地状态。
-- [ ] PR 描述包含改动原因、用户影响、验证方式和已知限制。
+- [ ] Scope matches the issue or request; no unrelated rewrite is included.
+- [ ] New behavior has tests; existing tests were not weakened without justification.
+- [ ] `npm run build` and relevant tests pass, or the exact blocker is disclosed.
+- [ ] User-visible changes update the README, `docs/`, or examples.
+- [ ] No secrets, logs, generated directories, sessions, or local state are included.
+- [ ] The description explains motivation, user impact, validation, and known limits.
 
-提交信息使用 Conventional Commits，例如：
+Use Conventional Commits:
 
 ```text
 feat(extensions): add tool cancellation hook

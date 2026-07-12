@@ -110,7 +110,7 @@ Metis 支持交互式终端、Print 和 JSON 输出、RPC 集成，以及面向 
 
 ## 参与贡献
 
-欢迎参与 Metis 开发。核心功能开发、Extension 接入、Package 分发、测试与 AI 辅助开发说明见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+欢迎参与 Metis 开发。核心功能开发、Extension 接入、Package 分发、测试与 AI 辅助开发说明见 [CONTRIBUTING.zh-CN.md](CONTRIBUTING.zh-CN.md)。
 
 ## 许可证
 
