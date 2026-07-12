@@ -108,6 +108,10 @@ The package exports the SDK from `@wholiver_hu/metis` and the RPC entry point fr
 
 </details>
 
+## Contributing
+
+Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for core development, Extension integration, Package distribution, testing, and AI-assisted contribution guidance.
+
 ## License
 
-Distributed under the [MIT License](LICENSE).
+Distributed under the [MIT License](https://opensource.org/license/mit).
