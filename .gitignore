@@ -1,7 +1,11 @@
 node_modules
 dist
 .sessions
+.codegraph/
 .metis/plan/
+.metis-subagent-*
+outputs/
+test-subagent.log
 .env
 .DS_Store
 

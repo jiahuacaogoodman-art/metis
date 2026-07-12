@@ -3,6 +3,10 @@
 </p>
 
 <p align="center">
+  <strong>English</strong> · <a href="README.zh-CN.md">简体中文</a>
+</p>
+
+<p align="center">
   <strong>Help coding models finish work faster, remember what matters, and verify the result.</strong>
 </p>
 
@@ -13,6 +17,24 @@
 </p>
 
 ---
+
+## Quick start
+
+Requires Node.js `>=22.19.0` and npm.
+
+```bash
+git clone https://github.com/Wholiver/metis.git
+cd metis
+npm install
+npm run build
+node dist/cli.js
+```
+
+To see available options:
+
+```bash
+node dist/cli.js --help
+```
 
 ## Why Metis
 
@@ -65,24 +87,6 @@ Together, these behaviors help the same coding model work with better context, f
 1. **Understand** — read the request, recall relevant lessons, and investigate the codebase.
 2. **Build** — make focused changes and keep a useful work record.
 3. **Verify** — test the result and compare it with the original request.
-
-## Quick start
-
-Requires Node.js `>=22.19.0` and npm.
-
-```bash
-git clone https://github.com/Wholiver/metis.git
-cd metis
-npm install
-npm run build
-node dist/cli.js
-```
-
-To see available options:
-
-```bash
-node dist/cli.js --help
-```
 
 <details>
 <summary><strong>Developer information</strong></summary>
