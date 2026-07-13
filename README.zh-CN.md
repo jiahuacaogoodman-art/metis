@@ -23,7 +23,7 @@
 需要 Node.js `>=22.19.0` 和 npm。
 
 ```bash
-npm install -g @wholiver_hu/metis@rc
+npm i -g @wholiver_hu/metis@rc
 metis
 ```
 
