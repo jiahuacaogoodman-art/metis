@@ -23,17 +23,14 @@
 Requires Node.js `>=22.19.0` and npm.
 
 ```bash
-git clone https://github.com/Wholiver/metis.git
-cd metis
-npm install
-npm run build
-node dist/cli.js
+npm install -g @wholiver_hu/metis@rc
+metis
 ```
 
 To see available options:
 
 ```bash
-node dist/cli.js --help
+metis --help
 ```
 
 ## Why Metis

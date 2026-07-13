@@ -194,8 +194,8 @@ function resolveCurrentModel(ctx: ExtensionContext): { provider: string; id: str
 	return undefined;
 }
 
-function pruneTempLogs(ctx: ExtensionContext): void {
-	const tempDir = resolve(ctx.cwd, ".temp");
+function pruneTempLogs(cwd: string): void {
+	const tempDir = resolve(cwd, ".temp");
 	if (!existsSync(tempDir)) return;
 
 	const today = getTodayString();
@@ -258,7 +258,7 @@ function stopDreamCleanupWatcher(): void {
 	}
 }
 
-function startDreamCleanupWatcher(ctx: ExtensionContext, expectedDate: string): void {
+function startDreamCleanupWatcher(cwd: string, expectedDate: string): void {
 	stopDreamCleanupWatcher();
 	const startedAt = Date.now();
 
@@ -270,9 +270,8 @@ function startDreamCleanupWatcher(ctx: ExtensionContext, expectedDate: string): 
 		}
 
 		if (state.lastDreamDate === expectedDate) {
-			pruneTempLogs(ctx);
+			pruneTempLogs(cwd);
 			stopDreamCleanupWatcher();
-			updateStatusUI(ctx);
 			return;
 		}
 
@@ -282,7 +281,7 @@ function startDreamCleanupWatcher(ctx: ExtensionContext, expectedDate: string): 
 	}, 5 * 1000);
 }
 
-function spawnDreamCleanupHelper(ctx: ExtensionContext, expectedDate: string): void {
+function spawnDreamCleanupHelper(cwd: string, workingLogPath: string, expectedDate: string): void {
 	const dreamStatePath = getDreamStatePath();
 	const cleanupScript = `
 const { existsSync, readdirSync, rmSync, readFileSync, statSync } = require("fs");
@@ -348,10 +347,10 @@ const timer = setInterval(() => {
 		env: {
 			...process.env,
 			[DREAM_CLEANUP_HELPER_ENV]: "1",
-			METIS_DREAM_CLEANUP_TEMP_DIR: resolve(ctx.cwd, ".temp"),
+			METIS_DREAM_CLEANUP_TEMP_DIR: resolve(cwd, ".temp"),
 			METIS_DREAM_CLEANUP_STATE_PATH: dreamStatePath,
 			METIS_DREAM_CLEANUP_EXPECTED_DATE: expectedDate,
-			METIS_DREAM_CLEANUP_WORKING_LOG_PATH: getWorkingLogPath(ctx),
+			METIS_DREAM_CLEANUP_WORKING_LOG_PATH: workingLogPath,
 		},
 		stdio: "ignore",
 		detached: true,
@@ -380,11 +379,33 @@ function updateStatusUI(ctx: ExtensionContext) {
 	}
 }
 
+function isStaleExtensionContextError(error: unknown): boolean {
+	return error instanceof Error && error.message.startsWith("This extension ctx is stale after session replacement or reload.");
+}
+
+function notifyIfContextActive(ctx: ExtensionContext, message: string): void {
+	try {
+		ctx.ui.notify(message);
+	} catch (error) {
+		if (!isStaleExtensionContextError(error)) throw error;
+	}
+}
+
+function updateStatusUIIfContextActive(ctx: ExtensionContext): void {
+	try {
+		updateStatusUI(ctx);
+	} catch (error) {
+		if (!isStaleExtensionContextError(error)) throw error;
+	}
+}
+
 async function triggerDreamPhase(ctx: ExtensionContext, manual = false) {
 	if (isDreaming) return;
 
 	const state = readState();
 	if (!state.enabled) return;
+	const cwd = ctx.cwd;
+	const workingLogPath = getWorkingLogPath(ctx);
 
 	const today = getTodayString();
 	if (!manual && !shouldTriggerDream(state, today)) return;
@@ -406,8 +427,8 @@ async function triggerDreamPhase(ctx: ExtensionContext, manual = false) {
 
 	isDreaming = true;
 	updateStatusUI(ctx);
-	startDreamCleanupWatcher(ctx, today);
-	spawnDreamCleanupHelper(ctx, today);
+	startDreamCleanupWatcher(cwd, today);
+	spawnDreamCleanupHelper(cwd, workingLogPath, today);
 
 	try {
 		const childArgs = [
@@ -431,7 +452,7 @@ async function triggerDreamPhase(ctx: ExtensionContext, manual = false) {
 		child.on("exit", (code) => {
 			isDreaming = false;
 			if (code === 0) {
-				pruneTempLogs(ctx);
+				pruneTempLogs(cwd);
 				stopDreamCleanupWatcher();
 
 				const currentState = readState();
@@ -439,13 +460,14 @@ async function triggerDreamPhase(ctx: ExtensionContext, manual = false) {
 				delete currentState.nextDreamRetryAt;
 				delete currentState.lastDreamError;
 				writeState(currentState);
-				ctx.ui.notify("Background Dream Phase completed successfully.");
+				notifyIfContextActive(ctx, "Background Dream Phase completed successfully.");
 			} else {
 				stopDreamCleanupWatcher();
 				const currentState = readState();
 				const retryDelay = recordDreamFailure(currentState, `Exit code ${code ?? "unknown"}`);
 				writeState(currentState);
-				ctx.ui.notify(
+				notifyIfContextActive(
+					ctx,
 					`Background Dream Phase failed (exit code ${code}, likely LLM rate limit or API error). ${
 						retryDelay === undefined
 							? "Daily retry limit reached."
@@ -454,7 +476,7 @@ async function triggerDreamPhase(ctx: ExtensionContext, manual = false) {
 				);
 			}
 			releaseDreamLock(lockToken);
-			updateStatusUI(ctx);
+			updateStatusUIIfContextActive(ctx);
 		});
 
 		child.on("error", (err) => {
@@ -464,14 +486,15 @@ async function triggerDreamPhase(ctx: ExtensionContext, manual = false) {
 			const retryDelay = recordDreamFailure(currentState, err.message);
 			writeState(currentState);
 			releaseDreamLock(lockToken);
-			ctx.ui.notify(
+			notifyIfContextActive(
+				ctx,
 				`Failed to spawn Dream Phase: ${err.message}. ${
 					retryDelay === undefined
 						? "Daily retry limit reached."
 						: `Retrying automatically in ${formatRetryDelay(retryDelay)}.`
 				}`,
 			);
-			updateStatusUI(ctx);
+			updateStatusUIIfContextActive(ctx);
 		});
 
 		child.unref();

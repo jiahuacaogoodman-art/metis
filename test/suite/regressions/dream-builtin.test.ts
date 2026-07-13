@@ -197,6 +197,62 @@ describe("dream builtin registration", () => {
 		);
 	});
 
+	it("finishes child cleanup after its extension context becomes stale", async () => {
+		tempRoot = mkdtempSync(join(tmpdir(), "metis-dream-stale-context-"));
+		const cwd = join(tempRoot, "project");
+		const agentDir = join(tempRoot, "agent");
+		mkdirSync(join(cwd, ".temp"), { recursive: true });
+		mkdirSync(agentDir, { recursive: true });
+		process.env.METIS_CODING_AGENT_DIR = agentDir;
+		writeFileSync(join(tempRoot, "dream_state.json"), JSON.stringify({ enabled: true, lastDreamDate: "2000-01-01" }));
+
+		const handlers = new Map<string, Array<(event: unknown, ctx: any) => void>>();
+		dreamMode({
+			registerCommand: vi.fn(),
+			on(event: string, handler: (event: unknown, ctx: any) => void) {
+				handlers.set(event, [...(handlers.get(event) ?? []), handler]);
+			},
+		} as any);
+		const spawned: EventEmitter[] = [];
+		spawnMock.mockImplementation(() => {
+			const child = new EventEmitter() as EventEmitter & { unref: () => void };
+			child.unref = vi.fn();
+			spawned.push(child);
+			return child;
+		});
+		vi.spyOn(globalThis, "setInterval").mockReturnValue(1 as any);
+		vi.spyOn(globalThis, "clearInterval").mockImplementation(() => undefined);
+
+		let active = true;
+		const staleError = () => new Error("This extension ctx is stale after session replacement or reload.");
+		const setStatus = vi.fn();
+		const notify = vi.fn();
+		const ctx = {
+			get cwd() {
+				if (!active) throw staleError();
+				return cwd;
+			},
+			hasPendingMessages: () => false,
+			isIdle: () => true,
+			sessionManager: { getBranch: () => [], getCwd: () => cwd, getSessionId: () => "test-session" },
+			get ui() {
+				if (!active) throw staleError();
+				return { setStatus, notify };
+			},
+		};
+
+		await handlers.get("session_start")?.[0]?.({}, ctx);
+		expect(spawned).toHaveLength(2);
+
+		active = false;
+		expect(() => spawned[1]?.emit("exit", 0)).not.toThrow();
+		expect(JSON.parse(readFileSync(join(tempRoot, "dream_state.json"), "utf-8"))).toMatchObject({
+			enabled: true,
+			lastDreamDate: expect.not.stringMatching(/^2000-01-01$/),
+		});
+		expect(notify).not.toHaveBeenCalled();
+	});
+
 	it("does not start a second dream while another process holds the lock", async () => {
 		tempRoot = mkdtempSync(join(tmpdir(), "metis-dream-lock-"));
 		const cwd = join(tempRoot, "project");

@@ -1,8 +1,19 @@
 # Changelog
 
-This changelog starts with the Metis `rc-1.0.0` release candidate. Earlier development history is available through Git.
+This changelog starts with the Metis `1.0.0-rc.1` release candidate. Earlier development history is available through Git.
 
-## [rc-1.0.0] - 2026-07-12
+## [1.0.0-rc.2] - 2026-07-13
+
+### Fixes
+
+- Kept Dream Phase cleanup and state updates working after the originating Extension context becomes stale.
+- Avoided stale-context UI notifications after session replacement or Extension reload.
+
+### Documentation
+
+- Updated English and Simplified Chinese Quick Start instructions to install Metis directly from npm.
+
+## [1.0.0-rc.1] - 2026-07-12
 
 ### Highlights
 
@@ -40,4 +51,4 @@ This changelog starts with the Metis `rc-1.0.0` release candidate. Earlier devel
 
 ### Release candidate notice
 
-`rc-1.0.0` is a release candidate. Public APIs, Extension events, Package metadata, and behavior may still change before the stable `1.0.0` release.
+`1.0.0-rc.1` is a release candidate. Public APIs, Extension events, Package metadata, and behavior may still change before the stable `1.0.0` release.
